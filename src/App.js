@@ -58,6 +58,9 @@ class App extends React.Component {
   render () {
     return (
       <div className={styles.appContainer}>
+        <div style={{ textAlign: 'center' }}>
+          <OctaveSelector currentOctave={this.state.currentOctave} onOctaveChange={this.handleOctaveChange} />
+        </div>
         <div className={styles.roundPadContainer}>
           <RoundPad
             mode={this.state.currentModeIndex}
@@ -73,9 +76,6 @@ class App extends React.Component {
           </div>
           <div className={styles.column}>
             <RootSelector currentRootIndex={this.state.currentRootIndex} onRootChange={this.handleRootChange} />
-            <div>
-              <OctaveSelector currentOctave={this.state.currentOctave} onOctaveChange={this.handleOctaveChange} />
-            </div>
           </div>
         </div>
       </div>

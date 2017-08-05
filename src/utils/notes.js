@@ -17,5 +17,5 @@ export const MODE_DISTANCES = [
   rotate(DIATONIC_DISTANCES, 4), // V
   rotate(DIATONIC_DISTANCES, 5), // VI
   rotate(DIATONIC_DISTANCES, 6), // VII
-  [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]
+  [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]
 ]

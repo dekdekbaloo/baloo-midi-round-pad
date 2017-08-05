@@ -12,7 +12,7 @@ class RootSelector extends React.Component {
   }
   render () {
     return (
-      <Select inline>
+      <Select>
         {
           ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'].map((root, i) => (
             <Select.Option
