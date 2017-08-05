@@ -15,7 +15,7 @@ const Select = ({ children, inline, ...props }) => (
 )
 Select.propTypes = {
   children: PropTypes.node.isRequired,
-  inline: PropTypes.bool.isRequired
+  inline: PropTypes.bool
 }
 const Option = ({ children, active, ...props }) => (
   <div

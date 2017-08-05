@@ -1,4 +1,4 @@
-const DIATONIC_DISTANCES = [ 1, 1, 0.5, 1, 1, 1, 0.5 ]
+const DIATONIC_DISTANCES = [ 2, 2, 1, 2, 2, 2, 1 ]
 
 function rotate (array, n) {
   const temp = []
@@ -9,7 +9,7 @@ function rotate (array, n) {
   return [ ..._array, ...temp ]
 }
 
-export const DISTANCES = [
+export const MODE_DISTANCES = [
   DIATONIC_DISTANCES, // I
   rotate(DIATONIC_DISTANCES, 1), // II
   rotate(DIATONIC_DISTANCES, 2), // III

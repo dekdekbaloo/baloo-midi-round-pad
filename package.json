@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "NODE_ENV=development webpack-dev-server",
+    "dev": "NODE_ENV=development webpack-dev-server --host 0.0.0.0 --public 192.168.127.42:8080",
     "build": "rm -rf build && NODE_ENV=production webpack -p"
   },
   "devDependencies": {

@@ -4,7 +4,7 @@ import Select from '../ui/Select'
 
 class RootSelector extends React.Component {
   static propTypes = {
-    currentRoot: PropTypes.string.isRequired,
+    currentRootIndex: PropTypes.string.isRequired,
     onRootChange: PropTypes.func.isRequired
   }
   createRootSelectHandler = root => () => {
@@ -14,11 +14,11 @@ class RootSelector extends React.Component {
     return (
       <Select inline>
         {
-          ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'].map((root) => (
+          ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'].map((root, i) => (
             <Select.Option
-              onClick={this.createRootSelectHandler(root)}
+              onClick={this.createRootSelectHandler(i)}
               key={root}
-              active={this.props.currentRoot === root}
+              active={this.props.currentRootIndex === i}
             >
               {root}
             </Select.Option>

@@ -1,11 +1,13 @@
-import { DISTANCES } from '../utils/notes'
+import { MODE_DISTANCES } from '../utils/notes'
 import PropTypes from 'prop-types'
 import React from 'react'
 import styles from './RoundPad.styl'
 
 class RoundPad extends React.Component {
   static propTypes = {
-    mode: PropTypes.number
+    mode: PropTypes.number,
+    onNoteTouchStart: PropTypes.func.isRequired,
+    onNoteTouchEnd: PropTypes.func.isRequired
   }
   static defaultProps = {
     mode: 0
@@ -16,16 +18,16 @@ class RoundPad extends React.Component {
       y: Math.sin(degree * Math.PI / 180) * radius + 50
     }
   }
-  createTouchHandler (note) {
+  createTouchHandler (distance) {
     return () => {
-      console.log(note)
+      this.props.onNoteTouchStart(distance)
     }
   }
   render () {
     return (
       <svg className={styles.roundPad} viewBox='0 0 100 100'>
-        {DISTANCES[this.props.mode].reduce(({ paths, lastAngle }, distance, i, distances) => {
-          const angleWidth = distance * 360 / (this.props.mode === 7 ? distances.length : distances.length - 1)
+        {MODE_DISTANCES[this.props.mode].reduce(({ paths, lastAngle, distanceSum }, distance, i, distances) => {
+          const angleWidth = distance * 180 / (this.props.mode === 7 ? distances.length : distances.length - 1)
           const radius = 45
           const point1 = this.getPointFromDegree(lastAngle, radius)
           const arcPoint = this.getPointFromDegree(lastAngle + angleWidth * 0.5, 50)
@@ -35,13 +37,15 @@ class RoundPad extends React.Component {
               ...paths,
               <path
                 d={`M50 50 ${point1.x} ${point1.y} ${arcPoint.x} ${arcPoint.y} ${point2.x} ${point2.y}Z`}
-                onClick={this.createTouchHandler(distance)}
+                onTouchStart={this.createTouchHandler(distanceSum)}
+                onTouchEnd={this.props.onNoteTouchEnd}
                 key={i}
               />
             ],
-            lastAngle: lastAngle + angleWidth
+            lastAngle: lastAngle + angleWidth,
+            distanceSum: distanceSum + distance
           }
-        }, { paths: [], lastAngle: -90 }).paths
+        }, { paths: [], lastAngle: -90, distanceSum: 0 }).paths
         }
       </svg>
     )
