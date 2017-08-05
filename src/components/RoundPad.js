@@ -1,51 +1,56 @@
+import { DISTANCES } from '../utils/notes'
 import PropTypes from 'prop-types'
 import React from 'react'
+import styles from './RoundPad.styl'
+
 class RoundPad extends React.Component {
-  static DIATONIC = 'diatonic'
-  static CHROMATIC = 'chromatic'
+  static DIATONIC = 0
+  static II = 1
+  static III = 2
+  static IV = 3
+  static V = 4
+  static VI = 5
+  static VII = 6
+  static CHROMATIC = 7
   static propTypes = {
     mode: PropTypes.oneOf([ RoundPad.DIATONIC, RoundPad.CHROMATIC ])
   }
   static defaultProps = {
     mode: RoundPad.DIATONIC
   }
-  getNoteArray (mode) {
-    if (mode === RoundPad.DIATONIC) {
-      return ['C', 'D', 'E', 'F', 'G', 'A', 'B']
+  getPointFromDegree (degree, radius) {
+    return {
+      x: Math.cos(degree * Math.PI / 180) * radius + 50,
+      y: Math.sin(degree * Math.PI / 180) * radius + 50
     }
   }
-  createClickHandler (note) {
-    return (e) => {
+  createTouchHandler (note) {
+    return () => {
       console.log(note)
     }
   }
   render () {
     return (
-      <svg width={500} height={500} viewBox='0 0 100 100'>
-        {this.getNoteArray(this.props.mode).map((note, i, notes) => {
-          const angleWidth = 360 / notes.length
-          const currentAngle = -90 + i * angleWidth
-          const radius = 50
-          const firstAngle = (currentAngle - angleWidth * 0.5)
-          const point1 = {
-            x: Math.cos(firstAngle * Math.PI / 180) * radius + radius,
-            y: Math.sin(firstAngle * Math.PI / 180) * radius + radius
+      <svg className={styles.roundPad} viewBox='0 0 100 100'>
+        {DISTANCES[this.props.mode].reduce(({ paths, lastAngle }, distance, i, distances) => {
+          const angleWidth = distance * 360 / (distances.length - 1)
+          const radius = 45
+          const point1 = this.getPointFromDegree(lastAngle, radius)
+          const arcPoint = this.getPointFromDegree(lastAngle + angleWidth * 0.5, 50)
+          const point2 = this.getPointFromDegree(lastAngle + angleWidth, radius)
+          return {
+            paths: [
+              ...paths,
+              <path
+                d={`M50 50 ${point1.x} ${point1.y} ${arcPoint.x} ${arcPoint.y} ${point2.x} ${point2.y}Z`}
+                onClick={this.createTouchHandler(distance)}
+                key={i}
+              />
+            ],
+            lastAngle: lastAngle + angleWidth
           }
-          const secondAngle = (currentAngle + angleWidth * 0.5)
-          const point2 = {
-            x: Math.cos(secondAngle * Math.PI / 180) * radius + radius,
-            y: Math.sin(secondAngle * Math.PI / 180) * radius + radius
-          }
-          return (
-            <path
-              d={`M50 50 ${point1.x} ${point1.y} ${point2.x} ${point2.y}Z`}
-              fill='#5288b9'
-              stroke='#89cbbb'
-              strokeWidth='0.1'
-              onClick={this.createClickHandler(note)}
-            />
-          )
-        })}
+        }, { paths: [], lastAngle: -90 }).paths
+        }
       </svg>
     )
   }
