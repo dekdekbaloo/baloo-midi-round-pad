@@ -14,7 +14,7 @@ class App extends React.Component {
   componentDidMount () {
     window.navigator.requestMIDIAccess().then(({ outputs }) => {
       const devices = [ ...outputs ]
-      console.log('device', devices[0])
+      // TODO: create devices selector
       this.device = devices[0][1]
     })
   }
@@ -27,12 +27,31 @@ class App extends React.Component {
   handleOctaveChange = octave => {
     this.setState({ currentOctave: octave })
   }
-  sendNote = distance => {
-    if (!this.device) return
+  nextOctave = () => {
+    if (this.state.currentOctave >= 4) return
+    this.setState({ currentOctave: this.state.currentOctave + 1 })
+  }
+  previousOctave = () => {
+    if (this.state.currentOctave <= -4) return
+    this.setState({ currentOctave: this.state.currentOctave - 1 })
+  }
+  calculateMidiNote = distance => {
     const { currentOctave, currentRootIndex } = this.state
+    return 0x3c + distance + currentRootIndex + 12 * currentOctave
+  }
+  noteOff = distance => {
+    if (!this.device) return
+    this.device.send([
+      0x80,
+      this.calculateMidiNote(distance),
+      0x40
+    ])
+  }
+  noteOn = distance => {
+    if (!this.device) return
     this.device.send([
       0x90,
-      0x3c + distance + currentRootIndex + 12 * currentOctave,
+      this.calculateMidiNote(distance),
       0x7F
     ])
   }
@@ -42,8 +61,10 @@ class App extends React.Component {
         <div className={styles.roundPadContainer}>
           <RoundPad
             mode={this.state.currentModeIndex}
-            onNoteTouchStart={this.sendNote}
-            onNoteTouchEnd={this.releaseNote}
+            noteOn={this.noteOn}
+            noteOff={this.noteOff}
+            nextOctave={this.nextOctave}
+            previousOctave={this.previousOctave}
           />
         </div>
         <div className={styles.selectors}>

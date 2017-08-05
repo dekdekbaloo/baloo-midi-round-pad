@@ -4,7 +4,7 @@ import Select from '../ui/Select'
 
 class RootSelector extends React.Component {
   static propTypes = {
-    currentRootIndex: PropTypes.string.isRequired,
+    currentRootIndex: PropTypes.number.isRequired,
     onRootChange: PropTypes.func.isRequired
   }
   createRootSelectHandler = root => () => {
