@@ -4,19 +4,11 @@ import React from 'react'
 import styles from './RoundPad.styl'
 
 class RoundPad extends React.Component {
-  static DIATONIC = 0
-  static II = 1
-  static III = 2
-  static IV = 3
-  static V = 4
-  static VI = 5
-  static VII = 6
-  static CHROMATIC = 7
   static propTypes = {
-    mode: PropTypes.oneOf([ RoundPad.DIATONIC, RoundPad.CHROMATIC ])
+    mode: PropTypes.number
   }
   static defaultProps = {
-    mode: RoundPad.DIATONIC
+    mode: 0
   }
   getPointFromDegree (degree, radius) {
     return {
@@ -33,7 +25,7 @@ class RoundPad extends React.Component {
     return (
       <svg className={styles.roundPad} viewBox='0 0 100 100'>
         {DISTANCES[this.props.mode].reduce(({ paths, lastAngle }, distance, i, distances) => {
-          const angleWidth = distance * 360 / (distances.length - 1)
+          const angleWidth = distance * 360 / (this.props.mode === 7 ? distances.length : distances.length - 1)
           const radius = 45
           const point1 = this.getPointFromDegree(lastAngle, radius)
           const arcPoint = this.getPointFromDegree(lastAngle + angleWidth * 0.5, 50)
