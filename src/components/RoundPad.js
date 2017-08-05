@@ -80,10 +80,11 @@ class RoundPad extends React.Component {
     const octaveChangeDirection = this.calculateOctaveChangeDirection(
       distance, this.lastDistance, this.distanceSum
     )
-    octaveChangeDirection > 0
-      ? this.props.nextOctave()
-      : octaveChangeDirection < 0
-        ? this.props.previousOctave() : null
+    if (octaveChangeDirection > 0) {
+      this.props.nextOctave()
+    } else if (octaveChangeDirection < 0) {
+      this.props.previousOctave()
+    }
     this.props.noteOn(distance)
     this.lastDistance = distance
   }
