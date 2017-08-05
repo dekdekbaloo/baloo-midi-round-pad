@@ -20,19 +20,23 @@ class RoundPad extends React.Component {
   componentDidMount () {
     this.updateDistanceSum(this.props.mode)
     this.pad.addEventListener('touchstart', this.handleTouchStart, false)
-    this.pad.addEventListener('touchend', this.handleTouchEnd, false)
     this.pad.addEventListener('touchmove', this.handleTouchMove, false)
-    this.pad.addEventListener('touchcancel', this.handleTouchCancel, false)
+    this.pad.addEventListener('touchend', this.handleTouchEnd, false)
+    this.pad.addEventListener('touchcancel', this.handleTouchEnd, false)
   }
   componentWillUnmount () {
     this.pad.removeEventListener('touchstart', this.handleTouchStart, false)
-    this.pad.removeEventListener('touchend', this.handleTouchEnd, false)
     this.pad.removeEventListener('touchmove', this.handleTouchMove, false)
-    this.pad.removeEventListener('touchcancel', this.handleTouchCancel, false)
+    this.pad.removeEventListener('touchcancel', this.handleTouchEnd, false)
+    this.pad.removeEventListener('touchend', this.handleTouchEnd, false)
   }
   componentWillReceiveProps (nextProps) {
     this.updateDistanceSum(this.props.mode)
   }
+  getPadData = pad => ({
+    distance: +pad.getAttribute('data-distance'),
+    index: +pad.getAttribute('data-index')
+  })
   updateDistanceSum = mode => {
     this.distanceSum = MODE_DISTANCES[mode].reduce((prev, curr) => prev + curr, 0)
   }
@@ -43,16 +47,11 @@ class RoundPad extends React.Component {
     this.setState({ activeIndex: -1 })
   }
   handleTouchStart = e => {
-    const distance = +e.target.getAttribute('data-distance')
-    const index = +e.target.getAttribute('data-index')
+    const { distance, index } = this.getPadData(e.target)
     this.handlePadTouch(index)
     this.playNote(distance)
   }
   handleTouchEnd = () => {
-    this.handlePadUnTouch()
-    this.props.noteOff(this.lastDistance)
-  }
-  handleTouchCancel = () => {
     this.handlePadUnTouch()
     this.props.noteOff(this.lastDistance)
   }
@@ -62,28 +61,29 @@ class RoundPad extends React.Component {
     const touch = touches[touches.length - 1]
     const pad = document.elementFromPoint(touch.pageX, touch.pageY)
     if (!pad) return
-    const distance = +pad.getAttribute('data-distance')
-    const index = +pad.getAttribute('data-index')
+
+    const { distance, index } = this.getPadData(pad)
     if (this.lastDistance === distance) return
     this.handlePadTouch(index)
     this.playNote(distance)
   }
-  calculateOctaveOffset = distance => {
-    const diff = distance - this.lastDistance
-    const outerDiff = this.distanceSum - Math.abs(diff)
-    if (outerDiff < Math.abs(diff)) {
-      return diff > 0 ? -12 : 12
+  calculateOctaveChangeDirection = (distance, lastDistance, distanceSum) => {
+    const innerDiff = distance - lastDistance
+    const outerDiff = distanceSum - Math.abs(innerDiff)
+    if (outerDiff < Math.abs(innerDiff)) {
+      return innerDiff > 0 ? -1 : 1
     }
     return 0
   }
   playNote = distance => {
     this.props.noteOff(this.lastDistance)
-    const octaveOffset = this.calculateOctaveOffset(distance)
-    if (octaveOffset > 0) {
-      this.props.nextOctave()
-    } else if (octaveOffset < 0) {
-      this.props.previousOctave()
-    }
+    const octaveChangeDirection = this.calculateOctaveChangeDirection(
+      distance, this.lastDistance, this.distanceSum
+    )
+    octaveChangeDirection > 0
+      ? this.props.nextOctave()
+      : octaveChangeDirection < 0
+        ? this.props.previousOctave() : null
     this.props.noteOn(distance)
     this.lastDistance = distance
   }

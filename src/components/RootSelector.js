@@ -1,7 +1,7 @@
+import { DIATONIC_NOTES } from '../utils/notes'
 import PropTypes from 'prop-types'
 import React from 'react'
 import Select from '../ui/Select'
-
 class RootSelector extends React.Component {
   static propTypes = {
     currentRootIndex: PropTypes.number.isRequired,
@@ -12,9 +12,9 @@ class RootSelector extends React.Component {
   }
   render () {
     return (
-      <Select>
+      <Select inline>
         {
-          ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'].map((root, i) => (
+          DIATONIC_NOTES.map((root, i) => (
             <Select.Option
               onClick={this.createRootSelectHandler(i)}
               key={root}

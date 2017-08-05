@@ -8,6 +8,9 @@ function rotate (array, n) {
   }
   return [ ..._array, ...temp ]
 }
+export const DIATONIC_NOTES = [
+  'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'
+]
 
 export const MODE_DISTANCES = [
   DIATONIC_DISTANCES, // I
