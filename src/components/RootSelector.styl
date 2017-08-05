@@ -1,0 +1,14 @@
+.rootSelectorContainer
+  .container
+    @media screen and (max-width 600px)
+      max-width 90px
+      .option
+        min-width 50%
+        box-sizing border-box
+        &:not(:last-child)
+          border-right 0
+          border-bottom 1px solid black
+        &:nth-child(odd)
+          border-right 1px solid black
+        &:nth-child(11)
+          border-bottom 0

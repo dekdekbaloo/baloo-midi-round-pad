@@ -3,10 +3,11 @@ import React from 'react'
 import cx from 'classnames'
 import styles from './Select.styl'
 
-const Select = ({ children, inline, ...props }) => (
+const Select = ({ children, inline, className, ...props }) => (
   <div
     className={cx(styles.container, {
-      [styles.inline]: inline
+      [styles.inline]: inline,
+      [className]: className
     })}
     {...props}
   >
@@ -15,12 +16,14 @@ const Select = ({ children, inline, ...props }) => (
 )
 Select.propTypes = {
   children: PropTypes.node.isRequired,
-  inline: PropTypes.bool
+  inline: PropTypes.bool,
+  className: PropTypes.string
 }
-const Option = ({ children, active, ...props }) => (
+const Option = ({ children, active, className, ...props }) => (
   <div
     className={cx(styles.option, {
-      [styles.active]: active
+      [styles.active]: active,
+      [className]: className
     })}
     {...props}
   >
@@ -29,7 +32,8 @@ const Option = ({ children, active, ...props }) => (
 )
 Option.propTypes = {
   children: PropTypes.node.isRequired,
-  active: PropTypes.bool
+  active: PropTypes.bool,
+  className: PropTypes.string
 }
 
 Select.Option = Option
