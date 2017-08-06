@@ -12,6 +12,9 @@ class OctaveSelector extends React.Component {
   render () {
     return (
       <Select inline>
+        <Select.Label>
+          octave
+        </Select.Label>
         {
           [-4, -3, -2, -1, 0, 1, 2, 3, 4].map(octave => (
             <Select.Option

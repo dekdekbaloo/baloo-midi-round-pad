@@ -13,6 +13,9 @@ class ModeSelector extends React.Component {
   render () {
     return (
       <Select>
+        <Select.Label>
+          mode
+        </Select.Label>
         {
           ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'CHROMATIC'].map((mode, i) => (
             <Select.Option

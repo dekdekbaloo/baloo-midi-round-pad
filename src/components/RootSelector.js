@@ -16,6 +16,9 @@ class RootSelector extends React.Component {
     return (
       <div className={styles.rootSelectorContainer}>
         <Select className={styles.container} inline>
+          <Select.Label>
+            root
+          </Select.Label>
           {DIATONIC_NOTES.map((root, i) => (
             <Select.Option
               className={styles.option}

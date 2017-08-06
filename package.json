@@ -4,8 +4,10 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "NODE_ENV=development webpack-dev-server --host 0.0.0.0",
-    "build": "rm -rf build && NODE_ENV=production webpack -p"
+    "dev": "NODE_ENV=development webpack-dev-server",
+    "build": "rm -rf build && NODE_ENV=production webpack -p",
+    "prepublish": "PUBLIC_PATH=/baloo-midi-round-pad/ npm run build",
+    "publish": "node ./scripts/pubishGhPages.js"
   },
   "devDependencies": {
     "babel": "^6.23.0",
@@ -25,6 +27,7 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^7.1.0",
     "eslint-plugin-standard": "^3.0.1",
+    "gh-pages": "^1.0.0",
     "html-webpack-plugin": "^2.29.0",
     "style-loader": "^0.18.2",
     "stylus": "^0.54.5",

@@ -19,6 +19,7 @@ Select.propTypes = {
   inline: PropTypes.bool,
   className: PropTypes.string
 }
+
 const Option = ({ children, active, className, ...props }) => (
   <div
     className={cx(styles.option, {
@@ -36,5 +37,17 @@ Option.propTypes = {
   className: PropTypes.string
 }
 
+const Label = ({ children }) => (
+  <div className={styles.label}>
+    <span>
+      {children}
+    </span>
+  </div>
+)
+Label.propTypes = {
+  children: PropTypes.node.isRequired
+}
+
 Select.Option = Option
+Select.Label = Label
 export default Select

@@ -19,13 +19,11 @@ class RoundPad extends React.Component {
   }
   componentDidMount () {
     this.updateDistanceSum(this.props.mode)
-    this.pad.addEventListener('touchstart', this.handleTouchStart, false)
     this.pad.addEventListener('touchmove', this.handleTouchMove, false)
     this.pad.addEventListener('touchend', this.handleTouchEnd, false)
     this.pad.addEventListener('touchcancel', this.handleTouchEnd, false)
   }
   componentWillUnmount () {
-    this.pad.removeEventListener('touchstart', this.handleTouchStart, false)
     this.pad.removeEventListener('touchmove', this.handleTouchMove, false)
     this.pad.removeEventListener('touchcancel', this.handleTouchEnd, false)
     this.pad.removeEventListener('touchend', this.handleTouchEnd, false)
@@ -59,7 +57,7 @@ class RoundPad extends React.Component {
     e.preventDefault()
     const touches = [ ...e.targetTouches ]
     const touch = touches[touches.length - 1]
-    const pad = document.elementFromPoint(touch.pageX, touch.pageY)
+    const pad = document.elementFromPoint(touch.clientX, touch.clientY)
     if (!pad) return
 
     const { distance, index } = this.getPadData(pad)
@@ -120,6 +118,7 @@ class RoundPad extends React.Component {
                 d={`M50 50 ${point1.x} ${point1.y} ${arcPoint.x} ${arcPoint.y} ${point2.x} ${point2.y}Z`}
                 data-distance={distanceSum}
                 data-index={i}
+                onTouchStart={this.handleTouchStart}
                 key={i}
               />
             ],

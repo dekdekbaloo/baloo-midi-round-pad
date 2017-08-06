@@ -2,13 +2,14 @@ const path = require('path')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const webpack = require('webpack')
 const isDevelopment = process.env.NODE_ENV === 'development'
+const publicPath = process.env.PUBLIC_PATH
 
 module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'build'),
     filename: isDevelopment ? 'bundle.js' : 'assets/javascripts/bundle-[hash].js',
-    publicPath: '/'
+    publicPath: publicPath || '/'
   },
   module: {
     rules: [

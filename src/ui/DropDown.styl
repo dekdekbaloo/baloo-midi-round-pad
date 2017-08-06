@@ -1,0 +1,28 @@
+.container
+  background-color #3c3c3c
+  display inline-block
+  position relative
+  color #8cb3d4
+  $arrow-width = 50px
+  &:active
+    background-color #367bb5
+  .display
+    background-color #246daa
+    width 'calc(100% - %s)' % ($arrow-width)
+    display inline-block
+    color white
+  .arrow
+    display inline-block
+    width $arrow-width
+  .options
+    background-color #3c3c3c
+    position absolute
+    left 0
+    right 0
+  .option
+    padding 5px
+    &.active
+      background-color #246daa
+      color white
+    &:active
+      background-color #367bb5

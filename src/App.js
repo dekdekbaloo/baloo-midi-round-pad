@@ -1,31 +1,44 @@
+import DeviceSelector from './components/DeviceSelector'
 import ModeSelector from './components/ModeSelector'
+import Notice from './ui/Notice'
 import OctaveSelector from './components/OctaveSelector'
 import React from 'react'
 import RootSelector from './components/RootSelector'
 import RoundPad from './components/RoundPad'
 import styles from './App.styl'
-
 class App extends React.Component {
   state = {
     currentModeIndex: 0,
     currentRootIndex: 0,
-    currentOctave: 0
+    currentOctave: 0,
+    currentDeviceIndex: -1,
+    devices: [ ],
+    isWebMIDISupported: false,
+    shouldShowNotice: false
   }
   componentDidMount () {
+    if (!window.navigator.requestMIDIAccess) {
+      this.setState({
+        shouldShowNotice: true
+      })
+    }
     window.navigator.requestMIDIAccess().then(({ outputs }) => {
-      const devices = [ ...outputs ]
-      // TODO: create devices selector
-      this.device = devices[0][1]
+      this.setState({
+        isWebMIDISupported: true,
+        devices: [ ...outputs ]
+      })
     })
   }
-  handleModeChange = modeIndex => {
-    this.setState({ currentModeIndex: modeIndex })
+  componentWillUpdate (nextProps, nextState) {
+    if (nextState.currentDeviceIndex !== this.state.currentDeviceIndex) {
+      this.device = this.state.devices[nextState.currentDeviceIndex]
+    }
   }
-  handleRootChange = rootIndex => {
-    this.setState({ currentRootIndex: rootIndex })
+  dismissNotice = () => {
+    this.setState({ shouldShowNotice: false })
   }
-  handleOctaveChange = octave => {
-    this.setState({ currentOctave: octave })
+  createChangeHandler = name => value => {
+    this.setState({ [name]: value })
   }
   nextOctave = () => {
     if (this.state.currentOctave >= 4) return
@@ -58,8 +71,15 @@ class App extends React.Component {
   render () {
     return (
       <div className={styles.appContainer}>
-        <div style={{ textAlign: 'center' }}>
-          <OctaveSelector currentOctave={this.state.currentOctave} onOctaveChange={this.handleOctaveChange} />
+        <div className={styles.deviceSelector}>
+          <DeviceSelector
+            activeIndex={this.state.currentDeviceIndex}
+            devices={this.state.devices}
+            onDeviceIndexChange={this.createChangeHandler('currentDeviceIndex')}
+          />
+        </div>
+        <div className={styles.selectorContainer}>
+          <OctaveSelector currentOctave={this.state.currentOctave} onOctaveChange={this.createChangeHandler('currentOctave')} />
         </div>
         <div className={styles.roundPadContainer}>
           <RoundPad
@@ -70,14 +90,21 @@ class App extends React.Component {
             previousOctave={this.previousOctave}
           />
         </div>
-        <div className={styles.selectors}>
+        <div className={styles.bottomPanels}>
           <div className={styles.column}>
-            <ModeSelector currentModeIndex={this.state.currentModeIndex} onModeChange={this.handleModeChange} />
+            <ModeSelector currentModeIndex={this.state.currentModeIndex} onModeChange={this.createChangeHandler('currentModeIndex')} />
           </div>
           <div className={styles.column}>
-            <RootSelector currentRootIndex={this.state.currentRootIndex} onRootChange={this.handleRootChange} />
+            <RootSelector currentRootIndex={this.state.currentRootIndex} onRootChange={this.createChangeHandler('currentRootIndex')} />
           </div>
         </div>
+        {this.state.shouldShowNotice
+          ? (
+            <Notice onCloseButtonClick={this.dismissNotice}>
+              Your browser doesn't support WebMIDI please open this with other browsers
+            </Notice>
+          ) : null
+        }
       </div>
     )
   }

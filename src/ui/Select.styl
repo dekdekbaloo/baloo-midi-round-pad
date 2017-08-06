@@ -1,11 +1,11 @@
 .container
+  $border-radius = 5px
   display inline-block
-  margin 15px
-  background-color #3c3c3c
-  border-radius 5px
+  border-radius $border-radius
   overflow hidden
   vertical-align top
   .option
+    background-color #3c3c3c
     cursor pointer
     text-align center
     padding 10px
@@ -22,3 +22,10 @@
       &:not(:last-child)
         border-bottom 0
         border-right 1px solid black
+  .label
+    text-align left
+    span
+      display inline-block
+      border-top-right-radius $border-radius
+      padding 0 5px
+      background-color #38506a
